@@ -25,11 +25,14 @@ class MainWin(QWidget):
         self.w.show()
 
 class ErrorWin:
-    def __init__(self):
+    def __init__(self, message = None):
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Critical)
         msg.setText("Ошибка!")
-        msg.setInformativeText('Заполните правильно все поля ввода.')
+        if message == None:
+            msg.setInformativeText('Заполните правильно все поля ввода.')
+        else:
+            msg.setInformativeText(message)
         msg.setWindowTitle("Внимание!")
         msg.exec_()
 
@@ -109,8 +112,8 @@ class AddWin(QWidget):
         self.dict_of_tests = {}
         self.counter_of_elem_grid1 = 0
         self.is_first_test = False
-        self.past_limitation = ''
         self.group_num = 1
+        self.name_files = []
         # self.path = self.parrent.path
         self.path = r'C:\Users\катя\Desktop\genjson2\тест'
 
@@ -132,7 +135,7 @@ class AddWin(QWidget):
         self.w.show()
 
 class FormWin(QWidget):
-    def __init__(self, btn, parent=None):
+    def __init__(self, btn, parent: AddWin | None = None):
         super(FormWin, self).__init__()
         self.parrent = parent
         self.btn = btn
@@ -147,6 +150,8 @@ class FormWin(QWidget):
         if self.parrent.counter_of_elem_grid1 == 0:
             self.ui.lineEdit_19.setEnabled(False)
             self.scores = '0'
+        elif self.parrent.counter == 0:
+            self.parrent.group_num = 1
 
         self.group_rb = QButtonGroup()
         self.group_rb.addButton(self.ui.radioButton_7)
@@ -158,16 +163,22 @@ class FormWin(QWidget):
         if self.parrent.row_for_tests_1 != 0 and self.parrent.row_for_tests_2 != 0:
              self.ui.pushButton_2.clicked.connect(self.necessarytest)
 
+
+
     def necessarytest(self):
         self.w = NecessWin(self.parrent.list_of_groups, self)
 
         self.w.show()
 
     def done(self):
+        fl = True
         self.test_filename = self.ui.lineEdit_16.text()
         self.limitation = self.ui.lineEdit_17.text()
         self.data_in = self.ui.plainTextEdit_7.toPlainText()
         self.data_out = self.ui.plainTextEdit_8.toPlainText()
+        if self.test_filename in self.parrent.name_files:
+            fl = False
+            self.close()
 
         if self.parrent.is_first_test != 0:
             self.scores = self.ui.lineEdit_19.text()
@@ -181,9 +192,11 @@ class FormWin(QWidget):
                 self.data_out != '' and \
                 self.scores != '' and \
                 self.scores.isdigit() and \
-                (self.ui.radioButton_7.isChecked() or (self.ui.radioButton_8.isChecked() and self.limitation != '')):
+                (self.ui.radioButton_7.isChecked() or (self.ui.radioButton_8.isChecked() and self.limitation != '')) and fl:
             self.parrent.counter += 1
             print('count:', self.parrent.counter)
+
+            self.parrent.name_files.append(self.test_filename)
 
             if self.parrent.counter == 1 and (not self.parrent.is_first_test):
                 self.create_second_header()
@@ -202,8 +215,12 @@ class FormWin(QWidget):
             self.close()
 
         else:
-            ErrorWin()
+            if fl == False:
+                ErrorWin('Тест с таким названием уже существует!')
+            else:
+                ErrorWin()
 
+        print(self.parrent.list_of_groups)
     def create_test_file(self):
         f_in = open(r'{}\{}.txt'.format(self.parrent.path, self.test_filename), 'w')
         f_out = open(r'{}\{}a.txt'.format(self.parrent.path, self.test_filename), 'w')
@@ -224,20 +241,18 @@ class FormWin(QWidget):
 
     def delete_test(self, btn):
         per = ''
-        fl = False
+        fl = False #тесты после удаляемого
         for id, list in self.parrent.dict_of_tests.items():
             if list[2] == btn:
-                self.delete_test_func(id, list, btn)
-                print('=', list[7], list[4])
+                self.__delete_test_func(id, list)
                 fl = True
-            if list[7] and fl:
-                if self.parrent.group_num-1 == list[4]:
-                    p = self.parrent.group_num - 1
-                    self.parrent.group_num = p
-                per = list
+                if list[7] and fl:
+                    if self.parrent.group_num-1 == list[4]:
+                        p = self.parrent.group_num - 1
+                        self.parrent.group_num = p
 
-            if list[4] == per[4] and list[7] == False and fl:
-                self.delete_test_func(id, list, btn)
+            if fl and list[7] == False and id > 1:
+                self.__delete_test_func(id, list)
 
         if self.btn == 1:
             self.parrent.counter_of_elem_grid1 -= 1
@@ -246,14 +261,22 @@ class FormWin(QWidget):
         if self.parrent.counter_of_elem_grid1 == 0:
             self.parrent.ui.pushb_1_add.show()
 
-    def delete_test_func(self, id, list, btn):
-        btn.hide()
+    def __delete_test_func(self, id, list):
+        print(list[0].text())
         list[1].hide()
+        list[2].hide()
         list[0].hide()
         list[3].hide()
         self.parrent.counter -= 1
-        os.remove(r'{}\{}.txt'.format(self.parrent.path, self.test_filename))
-        os.remove(r'{}\{}a.txt'.format(self.parrent.path, self.test_filename))
+        os.remove(r'{}\{}.txt'.format(self.parrent.path, list[0].text()))
+        os.remove(r'{}\{}a.txt'.format(self.parrent.path, list[0].text()))
+        self.parrent.name_files.remove(list[0].text())
+        self.parrent.list_of_groups.remove(str(id))
+
+    def edit_test(self, llist):
+        self.w = EditWin(llist, self.parrent)
+
+        self.w.show()
 
 
     def drawing_tests_in_list(self):
@@ -272,14 +295,18 @@ class FormWin(QWidget):
 
         self.pb_del.clicked.connect(lambda state, btn=self.pb_del: self.delete_test(btn))
 
+
+
         if self.parrent.counter_of_elem_grid1 == 0:
-            self.parrent.dict_of_tests[1] = [self.name_of_test, self.pb_edit, self.pb_del, self.group, 0, 0, self.limitation, False]
+            self.parrent.dict_of_tests[1] = [self.name_of_test, self.pb_edit, self.pb_del, self.group, 0, '0', self.limitation, True, self.data_in, self.data_out]
         elif self.ui.radioButton_8.isChecked():
             self.parrent.dict_of_tests[self.parrent.counter] = [self.name_of_test, self.pb_edit, self.pb_del, self.group, self.parrent.group_num,
-                                                                self.scores, self.limitation, True]
+                                                                self.scores, self.limitation, True, self.data_in, self.data_out]
         else:
             self.parrent.dict_of_tests[self.parrent.counter] = [self.name_of_test, self.pb_edit, self.pb_del,
-                                                                self.group, self.parrent.group_num-1, self.scores, '', False]
+                                                                self.group, self.parrent.group_num-1, self.scores, '', False, self.data_in, self.data_out]
+
+        self.pb_edit.clicked.connect(lambda state, llist=self.parrent.dict_of_tests[self.parrent.counter]: self.edit_test(llist))
 
     def adding_test_to_list(self):
         self.drawing_tests_in_list()
@@ -316,6 +343,55 @@ class FormWin(QWidget):
         else:
             self.ui.lineEdit_17.setDisabled(False)
             self.ui.pushButton_2.setDisabled(False)
+
+
+class EditWin(FormWin):
+    def __init__(self, llist, parent: AddWin):
+        super(FormWin, self).__init__()
+        self.ui = Ui_Form()
+        self.ui.setupUi(self)
+        self.arr = llist
+        self.parrent = parent
+
+        self.transfer()
+
+        if self.parrent.counter_of_elem_grid1 == 0 or \
+                (self.parrent.counter == 1 and self.parrent.counter_of_elem_grid1 == 1) or \
+                (self.parrent.counter == 2 and self.parrent.counter_of_elem_grid1 == 1):
+            self.ui.radioButton_7.setEnabled(False)
+
+        if self.parrent.counter_of_elem_grid1 == 0:
+            self.ui.lineEdit_19.setEnabled(False)
+            self.scores = '0'
+        elif self.parrent.counter == 0:
+            self.parrent.group_num = 1
+
+        self.group_rb = QButtonGroup()
+        self.group_rb.addButton(self.ui.radioButton_7)
+        self.group_rb.addButton(self.ui.radioButton_8)
+        self.group_rb.buttonClicked.connect(self.limit)
+
+        if self.parrent.row_for_tests_1 != 0 and self.parrent.row_for_tests_2 != 0:
+             self.ui.pushButton_2.clicked.connect(self.necessarytest)
+
+
+    def transfer(self):
+        self.ui.lineEdit_16.setText(self.arr[0].text())
+        self.ui.plainTextEdit_7.appendPlainText(self.arr[8])
+        self.ui.plainTextEdit_8.appendPlainText(self.arr[9])
+
+        if self.arr[7]:
+            self.ui.lineEdit_17.setText(self.arr[6])
+            self.ui.radioButton_8.setChecked(True)
+        else:
+            self.ui.radioButton_7.setChecked(True)
+            self.ui.lineEdit_17.setDisabled(True)
+
+        if self.parrent.is_first_test != 0 and self.parrent.dict_of_tests[1][0] != self.arr[0]:
+            self.ui.lineEdit_19.setText(self.arr[5])
+
+        if self.parrent.dict_of_tests[1][0] == self.arr[0]:
+            self.ui.lineEdit_19.setEnabled(False)
 
 
 
