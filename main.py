@@ -19,8 +19,8 @@ class MainWin(QWidget):
 
     def create_win_path(self):
         self.close()
-        # self.w = PathWin()
-        self.w = AddWin()
+        self.w = PathWin()
+        # self.w = AddWin()
 
         self.w.show()
 
@@ -93,7 +93,7 @@ class PathWin(QWidget):
 
     def create_win_add(self):
         self.close()
-        self.w = AddWin()
+        self.w = AddWin(self)
 
         self.w.show()
 
@@ -114,8 +114,8 @@ class AddWin(QWidget):
         self.is_first_test = False
         self.group_num = 1
         self.name_files = []
-        # self.path = self.parrent.path
-        self.path = r'C:\Users\катя\Desktop\genjson2\тест'
+        self.path = self.parrent.path
+        # self.path = r'C:\Users\катя\Desktop\genjson2\тест'
 
         self.ui.label.setFixedSize(850, 67)
 
