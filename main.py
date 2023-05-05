@@ -270,7 +270,6 @@ class FormWin(QWidget):
         os.remove(r'{}\{}a.txt'.format(self.parrent.path, list[0].text()))
         self.parrent.name_files.remove(list[0].text())
         if list[4] != 0 and list[7]:
-            print(self.parrent.list_of_groups, list[7], id,list)
             self.parrent.list_of_groups.remove(str(list[4]))
 
     def edit_test(self, llist):
