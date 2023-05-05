@@ -19,8 +19,8 @@ class MainWin(QWidget):
 
     def create_win_path(self):
         self.close()
-        self.w = PathWin()
-        # self.w = AddWin()
+        #self.w = PathWin()
+        self.w = AddWin()
 
         self.w.show()
 
@@ -114,8 +114,8 @@ class AddWin(QWidget):
         self.is_first_test = False
         self.group_num = 1
         self.name_files = []
-        self.path = self.parrent.path
-        # self.path = r'C:\Users\катя\Desktop\genjson2\тест'
+        #self.path = self.parrent.path
+        self.path = r'C:\Users\катя\Desktop\genjson2\тест'
 
         self.ui.label.setFixedSize(850, 67)
 
@@ -150,7 +150,7 @@ class FormWin(QWidget):
         if self.parrent.counter_of_elem_grid1 == 0:
             self.ui.lineEdit_19.setEnabled(False)
             self.scores = '0'
-        elif self.parrent.counter == 0:
+        elif self.parrent.counter == 1:
             self.parrent.group_num = 1
 
         self.group_rb = QButtonGroup()
@@ -203,7 +203,7 @@ class FormWin(QWidget):
 
             self.adding_test_to_list()
 
-            if self.ui.radioButton_8.isChecked() and self.parrent.counter > 1 and self.btn==2:
+            if self.ui.radioButton_8.isChecked() and self.parrent.counter > 1 and self.btn == 2:
                 self.group.setText('группа: {}'.format(self.parrent.group_num))
                 self.parrent.list_of_groups.append(str(self.parrent.group_num))
                 self.parrent.group_num += 1
@@ -220,7 +220,6 @@ class FormWin(QWidget):
             else:
                 ErrorWin()
 
-        print(self.parrent.list_of_groups)
     def create_test_file(self):
         f_in = open(r'{}\{}.txt'.format(self.parrent.path, self.test_filename), 'w')
         f_out = open(r'{}\{}a.txt'.format(self.parrent.path, self.test_filename), 'w')
@@ -246,7 +245,7 @@ class FormWin(QWidget):
             if list[2] == btn:
                 self.__delete_test_func(id, list)
                 fl = True
-                if list[7] and fl:
+                if list[7] and fl and list[4] != 0:
                     if self.parrent.group_num-1 == list[4]:
                         p = self.parrent.group_num - 1
                         self.parrent.group_num = p
@@ -262,7 +261,6 @@ class FormWin(QWidget):
             self.parrent.ui.pushb_1_add.show()
 
     def __delete_test_func(self, id, list):
-        print(list[0].text())
         list[1].hide()
         list[2].hide()
         list[0].hide()
@@ -271,7 +269,9 @@ class FormWin(QWidget):
         os.remove(r'{}\{}.txt'.format(self.parrent.path, list[0].text()))
         os.remove(r'{}\{}a.txt'.format(self.parrent.path, list[0].text()))
         self.parrent.name_files.remove(list[0].text())
-        self.parrent.list_of_groups.remove(str(id))
+        if list[4] != 0 and list[7]:
+            print(self.parrent.list_of_groups, list[7], id,list)
+            self.parrent.list_of_groups.remove(str(list[4]))
 
     def edit_test(self, llist):
         self.w = EditWin(llist, self.parrent)
