@@ -1,37 +1,15 @@
 import json
-import sys
 import os
 from PyQt5.QtWidgets import QApplication, QLabel, QButtonGroup, QWidget, QMessageBox, QTableWidgetItem
 from PyQt5 import QtWidgets, QtGui, QtCore
-from pydantic import BaseModel, validator
+from pydantic import BaseModel
 from typing import List
 
-from genjson import Ui_Form2
 from list_of_test import Ui_list_of_test
 from test_form import Ui_Form
 from chunk_form import Ui_Form3
-from path import Ui_PathWin
-from necessary_test import Ui_necessary_test
 from DispWin import DisplayWidget
 
-
-class Test(BaseModel):
-    score: int
-    filling_type_variable: str
-    answer: str
-
-class SettingsTestIn(BaseModel):
-    limitation_variable: list[str]
-    necessary_test: list
-    check_type: str
-
-class SettTest(BaseModel):
-    type_test: str
-    settings_test: dict
-    tests: list[Test]
-
-class SettingTests_json(BaseModel):
-    setting_tests: List[SettTest]
 
 class WidTest(BaseModel):
     id: int
@@ -54,6 +32,7 @@ class ErrorWin:
             msg.setInformativeText(message)
         msg.setWindowTitle("Внимание!")
         msg.exec_()
+
 
 class AddWin(QWidget):
     def __init__(self, parent=None):
@@ -118,7 +97,7 @@ class AddWin(QWidget):
 
     def create_json_file(self):
         self.json_file = {"setting_tests": []}
-        print(self.list_of_tests)
+
         for i in self.list_of_tests:
             limit = i.limit
             necessary_test = i.necessary_test
@@ -147,7 +126,8 @@ class AddWin(QWidget):
             with open("data_file.json", "w") as write_file:
                 json.dump(self.json_file, write_file)
 
-        print(self.json_file)
+        self.close()
+
 
 class FormWinTest(QWidget):
     def __init__(self, wid: DisplayWidget, arr=None, row=None, parent: AddWin | None = None):
@@ -241,6 +221,7 @@ class FormWinTest(QWidget):
         self.ui.plainTextEdit_7.appendPlainText(self.arr[1])
         self.ui.plainTextEdit_8.appendPlainText(self.arr[2])
         self.ui.lineEdit_19.setText(self.arr[3])
+
 
 class FormWinChunk(QWidget):
     def __init__(self, btn, parent: AddWin | None = None):
@@ -346,7 +327,6 @@ class FormWinChunk(QWidget):
 
         self.close()
 
-
     def connectPB(self, obj):
         self.wid.pb_del_chunk.clicked.connect(lambda state, x=obj: self.delete_wid(x))
         self.wid.pb_add_test.clicked.connect(self.call_win_test)
@@ -358,6 +338,7 @@ class FormWinChunk(QWidget):
         self.w = FormWinChunkEdit(self.btn, obj, self.parrent)
 
         self.w.show()
+
     def delete_test_table(self):
         row = self.wid.tableWidget_2.currentRow()
         if row > -1:
@@ -389,8 +370,6 @@ class FormWinChunk(QWidget):
 
             self.call_win_test(arr, row)
 
-
-
     def create_second_header(self):
         self.main_head_lb = QLabel('Основные тесты:')
         self.main_head_lb.setFont(QtGui.QFont('Consolas', 25))
@@ -415,7 +394,6 @@ class FormWinChunk(QWidget):
             self.parrent.counter_of_elem_grid1 -= 1
             self.parrent.pushb_2_add.setEnabled(False)
             self.parrent.pushb_2_create_file.setEnabled(False)
-
 
         if self.parrent.counter_of_elem_grid1 == 0:
             self.parrent.list_of_tests[0] = []
@@ -446,7 +424,6 @@ class FormWinChunk(QWidget):
             self.parrent.ui.pushb_1_add.hide()
 
 
-
 class FormWinChunkEdit(FormWinChunk):
     def __init__(self, btn, obj, parent: AddWin | None = None):
         super().__init__(btn, parent)
@@ -456,7 +433,6 @@ class FormWinChunkEdit(FormWinChunk):
         self.ui.lineEdit.textEdited.connect(self.color_necess)
 
         self.ui.lineEdit_17.setText(self.obj.widget.tableWidget.item(0, 0).text())
-
 
         if obj.id > 1:
             self.ui.lineEdit.setText(', '.join(list(map(str, self.obj.necessary_test))))
@@ -474,12 +450,9 @@ class FormWinChunkEdit(FormWinChunk):
         if self.obj.id > 1 and self.necesstest == [0]:
             ErrorWin('Заполните правильно поле с необходимыми группами тестов')
         else:
-
-
             self.overwriting()
 
             self.close()
-
 
     def overwriting(self):
         for i in range(len(self.parrent.list_of_tests)):
@@ -487,6 +460,7 @@ class FormWinChunkEdit(FormWinChunk):
             if self.parrent.list_of_tests[i].id == self.obj.id:
                 self.parrent.list_of_tests[i].limit = self.ui.lineEdit_17.text()
                 self.parrent.list_of_tests[i].necessary_test = self.necesstest
+
     def color_necess(self, k):
         if k != '':
             self.ui.lineEdit.setStyleSheet("color: black;")

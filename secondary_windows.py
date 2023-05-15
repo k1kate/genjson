@@ -2,8 +2,6 @@ import sys
 import os
 from PyQt5.QtWidgets import QApplication, QLabel, QButtonGroup, QWidget, QMessageBox, QTableWidgetItem
 from PyQt5 import QtWidgets, QtGui
-from pydantic import BaseModel
-from typing import List
 
 from auth_win import Ui_auth_win
 from genjson import Ui_Form2
@@ -52,6 +50,7 @@ class Ent(QWidget):
         self.w.show()
         self.close()
 
+
 class Reg(QWidget):
     def __init__(self):
         super().__init__()
@@ -70,8 +69,6 @@ class Reg(QWidget):
         self.w = MainWin()
         self.w.show()
         self.close()
-
-
 
 
 class MainWin(QWidget):
@@ -99,6 +96,7 @@ class ErrorWin:
         msg.setWindowTitle("Внимание!")
         msg.exec_()
 
+
 class PathWin(QWidget):
     def __init__(self):
         super(PathWin, self).__init__()
@@ -107,7 +105,6 @@ class PathWin(QWidget):
 
         self.ui.pb_browse.clicked.connect(self.getting_path)
         self.ui.pb_done.clicked.connect(self.done)
-
 
     def getting_path(self):
         self.path = QtWidgets.QFileDialog.getExistingDirectory(self, 'Укажите папку')
@@ -123,19 +120,14 @@ class PathWin(QWidget):
             ErrorWin()
 
     def create_win_add(self):
-
         self.w = AddWin()
 
         self.w.show()
         self.close()
 
 
-
-
 app = QApplication(sys.argv)
 # application = Auth()
 application = AddWin()
-
 application.show()
-
 sys.exit(app.exec())
