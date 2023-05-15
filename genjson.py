@@ -35,8 +35,11 @@ class Ui_Form2(object):
         self.add_2.setSizeIncrement(QtCore.QSize(0, 0))
         self.add_2.setBaseSize(QtCore.QSize(0, 0))
         font = QtGui.QFont()
-        font.setFamily("Arial")
+        font.setFamily("Consolas 12")
         font.setPointSize(28)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(50)
         self.add_2.setFont(font)
         self.add_2.setTabletTracking(False)
         self.add_2.setAcceptDrops(False)
@@ -44,7 +47,20 @@ class Ui_Form2(object):
         self.add_2.setToolTipDuration(-1)
         self.add_2.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.add_2.setAutoFillBackground(False)
-        self.add_2.setStyleSheet("")
+        self.add_2.setStyleSheet("QPushButton {\n"
+"        background-color: #F0F0F0;\n"
+"        border: 5px solid #B5B5B5; \n"
+"        border-radius: 10px; \n"
+"        padding: 6px;\n"
+"        font: 28pt \"Consolas\" bold;\n"
+"    \n"
+"    }\n"
+"    QPushButton:hover {\n"
+"        background-color: #DADADA;\n"
+"    }\n"
+"    QPushButton:pressed {\n"
+"        background-color: #919191;\n"
+"    }")
         self.add_2.setCheckable(False)
         self.add_2.setObjectName("add_2")
         self.horizontalLayout_2.addWidget(self.add_2)
@@ -58,13 +74,30 @@ class Ui_Form2(object):
         self.open_2.setMaximumSize(QtCore.QSize(500, 80))
         self.open_2.setSizeIncrement(QtCore.QSize(0, 0))
         font = QtGui.QFont()
-        font.setFamily("Arial")
+        font.setFamily("Consolas 12")
         font.setPointSize(28)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(50)
         self.open_2.setFont(font)
         self.open_2.setTabletTracking(False)
         self.open_2.setAcceptDrops(False)
         self.open_2.setToolTipDuration(-1)
         self.open_2.setAutoFillBackground(False)
+        self.open_2.setStyleSheet("QPushButton {\n"
+"        background-color: #F0F0F0;\n"
+"        border: 5px solid #B5B5B5; \n"
+"        border-radius: 10px; \n"
+"        padding: 6px;\n"
+"        font: 28pt \"Consolas\" bold;\n"
+"    \n"
+"    }\n"
+"    QPushButton:hover {\n"
+"        background-color: #DADADA;\n"
+"    }\n"
+"    QPushButton:pressed {\n"
+"        background-color: #919191;\n"
+"    }")
         self.open_2.setObjectName("open_2")
         self.horizontalLayout_2.addWidget(self.open_2)
 

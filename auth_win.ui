@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Form2</class>
- <widget class="QWidget" name="Form2">
+ <class>auth_win</class>
+ <widget class="QWidget" name="auth_win">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -29,7 +29,7 @@
    <property name="geometry">
     <rect>
      <x>0</x>
-     <y>0</y>
+     <y>10</y>
      <width>1021</width>
      <height>741</height>
     </rect>
@@ -51,7 +51,7 @@
      <number>0</number>
     </property>
     <item>
-     <widget class="QPushButton" name="add_2">
+     <widget class="QPushButton" name="auth">
       <property name="enabled">
        <bool>true</bool>
       </property>
@@ -123,7 +123,7 @@
     }</string>
       </property>
       <property name="text">
-       <string>Создать</string>
+       <string>Войти</string>
       </property>
       <property name="checkable">
        <bool>false</bool>
@@ -131,7 +131,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="open_2">
+     <widget class="QPushButton" name="reg">
       <property name="enabled">
        <bool>true</bool>
       </property>
@@ -191,7 +191,7 @@
     }</string>
       </property>
       <property name="text">
-       <string>Открыть</string>
+       <string>Регистрация</string>
       </property>
      </widget>
     </item>

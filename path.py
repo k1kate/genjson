@@ -23,17 +23,27 @@ class Ui_PathWin(object):
         PathWin.setMinimumSize(QtCore.QSize(798, 580))
         PathWin.setMaximumSize(QtCore.QSize(798, 580))
         self.layoutWidget = QtWidgets.QWidget(PathWin)
-        self.layoutWidget.setGeometry(QtCore.QRect(30, 220, 752, 347))
+        self.layoutWidget.setGeometry(QtCore.QRect(30, 190, 752, 366))
         self.layoutWidget.setObjectName("layoutWidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.layoutWidget)
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
-        self.verticalLayout.setSpacing(188)
+        self.verticalLayout.setSpacing(170)
         self.verticalLayout.setObjectName("verticalLayout")
         self.gridLayout = QtWidgets.QGridLayout()
         self.gridLayout.setContentsMargins(-1, -1, -1, 16)
         self.gridLayout.setHorizontalSpacing(30)
         self.gridLayout.setVerticalSpacing(38)
         self.gridLayout.setObjectName("gridLayout")
+        self.label_2 = QtWidgets.QLabel(self.layoutWidget)
+        font = QtGui.QFont()
+        font.setFamily("Consolas")
+        font.setPointSize(14)
+        self.label_2.setFont(font)
+        self.label_2.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.label_2.setStyleSheet("padding-left: 0;")
+        self.label_2.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.label_2.setObjectName("label_2")
+        self.gridLayout.addWidget(self.label_2, 1, 0, 1, 1)
         self.label = QtWidgets.QLabel(self.layoutWidget)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
@@ -47,43 +57,37 @@ class Ui_PathWin(object):
         self.label.setStyleSheet("")
         self.label.setObjectName("label")
         self.gridLayout.addWidget(self.label, 0, 0, 1, 1, QtCore.Qt.AlignRight)
-        self.label_2 = QtWidgets.QLabel(self.layoutWidget)
-        font = QtGui.QFont()
-        font.setFamily("Consolas")
-        font.setPointSize(14)
-        self.label_2.setFont(font)
-        self.label_2.setLayoutDirection(QtCore.Qt.LeftToRight)
-        self.label_2.setStyleSheet("padding-left: 0;")
-        self.label_2.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
-        self.label_2.setObjectName("label_2")
-        self.gridLayout.addWidget(self.label_2, 1, 0, 1, 1)
         self.pb_browse = QtWidgets.QPushButton(self.layoutWidget)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.pb_browse.sizePolicy().hasHeightForWidth())
         self.pb_browse.setSizePolicy(sizePolicy)
+        self.pb_browse.setMinimumSize(QtCore.QSize(0, 20))
+        self.pb_browse.setMaximumSize(QtCore.QSize(16777215, 40))
         font = QtGui.QFont()
-        font.setFamily("Consolas")
+        font.setFamily("Consolas 12")
         font.setPointSize(12)
         font.setBold(False)
         font.setItalic(False)
         font.setWeight(50)
         self.pb_browse.setFont(font)
-        self.pb_browse.setStyleSheet("font: 12pt \"Consolas\";")
+        self.pb_browse.setStyleSheet("QPushButton {\n"
+"        background-color: #F0F0F0;\n"
+"        border: 3px solid #B5B5B5; \n"
+"        border-radius: 10px; \n"
+"        padding: 6px;\n"
+"        font: 12pt \"Consolas\" bold;\n"
+"    \n"
+"    }\n"
+"    QPushButton:hover {\n"
+"        background-color: #DADADA;\n"
+"    }\n"
+"    QPushButton:pressed {\n"
+"        background-color: #919191;\n"
+"    }")
         self.pb_browse.setObjectName("pb_browse")
         self.gridLayout.addWidget(self.pb_browse, 0, 2, 1, 1, QtCore.Qt.AlignLeft)
-        self.le_filename = QtWidgets.QLineEdit(self.layoutWidget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Maximum)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.le_filename.sizePolicy().hasHeightForWidth())
-        self.le_filename.setSizePolicy(sizePolicy)
-        self.le_filename.setMinimumSize(QtCore.QSize(0, 33))
-        self.le_filename.setMaximumSize(QtCore.QSize(16777215, 33))
-        self.le_filename.setStyleSheet("font: 10pt \"Consolas\";")
-        self.le_filename.setObjectName("le_filename")
-        self.gridLayout.addWidget(self.le_filename, 1, 1, 1, 1)
         self.le_path = QtWidgets.QLineEdit(self.layoutWidget)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -102,6 +106,17 @@ class Ui_PathWin(object):
         self.le_path.setStyleSheet("font: 10pt \"Consolas\";")
         self.le_path.setObjectName("le_path")
         self.gridLayout.addWidget(self.le_path, 0, 1, 1, 1, QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
+        self.le_filename = QtWidgets.QLineEdit(self.layoutWidget)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Maximum)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.le_filename.sizePolicy().hasHeightForWidth())
+        self.le_filename.setSizePolicy(sizePolicy)
+        self.le_filename.setMinimumSize(QtCore.QSize(0, 33))
+        self.le_filename.setMaximumSize(QtCore.QSize(16777215, 33))
+        self.le_filename.setStyleSheet("font: 10pt \"Consolas\";")
+        self.le_filename.setObjectName("le_filename")
+        self.gridLayout.addWidget(self.le_filename, 1, 1, 1, 1)
         self.verticalLayout.addLayout(self.gridLayout)
         self.pb_done = QtWidgets.QPushButton(self.layoutWidget)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
@@ -110,8 +125,21 @@ class Ui_PathWin(object):
         sizePolicy.setHeightForWidth(self.pb_done.sizePolicy().hasHeightForWidth())
         self.pb_done.setSizePolicy(sizePolicy)
         self.pb_done.setMinimumSize(QtCore.QSize(200, 0))
-        self.pb_done.setMaximumSize(QtCore.QSize(200, 16777215))
-        self.pb_done.setStyleSheet("font: 14pt \"Consolas\";")
+        self.pb_done.setMaximumSize(QtCore.QSize(200, 40))
+        self.pb_done.setStyleSheet("QPushButton {\n"
+"        background-color: #F0F0F0;\n"
+"        border: 4px solid #B5B5B5; \n"
+"        border-radius: 10px; \n"
+"        padding: 6px;\n"
+"        font: 14pt \"Consolas\" bold;\n"
+"    \n"
+"    }\n"
+"    QPushButton:hover {\n"
+"        background-color: #DADADA;\n"
+"    }\n"
+"    QPushButton:pressed {\n"
+"        background-color: #919191;\n"
+"    }")
         self.pb_done.setObjectName("pb_done")
         self.verticalLayout.addWidget(self.pb_done, 0, QtCore.Qt.AlignHCenter)
 
@@ -121,7 +149,7 @@ class Ui_PathWin(object):
     def retranslateUi(self, PathWin):
         _translate = QtCore.QCoreApplication.translate
         PathWin.setWindowTitle(_translate("PathWin", "Form"))
-        self.label.setText(_translate("PathWin", "Путь:"))
         self.label_2.setText(_translate("PathWin", "Название файла:"))
+        self.label.setText(_translate("PathWin", "Путь:"))
         self.pb_browse.setText(_translate("PathWin", "Обзор"))
         self.pb_done.setText(_translate("PathWin", "Готово"))
