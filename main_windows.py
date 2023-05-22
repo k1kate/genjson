@@ -1,14 +1,20 @@
 import json
 import os
+import sys
+
 from PyQt5.QtWidgets import QApplication, QLabel, QButtonGroup, QWidget, QMessageBox, QTableWidgetItem
 from PyQt5 import QtWidgets, QtGui, QtCore
 from pydantic import BaseModel
-from typing import List
 
 from list_of_test import Ui_list_of_test
 from test_form import Ui_Form
 from chunk_form import Ui_Form3
 from DispWin import DisplayWidget
+from auth_win import Ui_auth_win
+from genjson import Ui_Form2
+from path import Ui_PathWin
+from ent_win import Ui_login
+from reg_win import Ui_login2
 
 
 class WidTest(BaseModel):
@@ -19,6 +25,109 @@ class WidTest(BaseModel):
     limit: list[str]
     necessary_test: list[int] = []
     test: list[str] = []
+
+class Auth(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.ui = Ui_auth_win()
+        self.ui.setupUi(self)
+
+        self.ui.auth.clicked.connect(self.open_ent)
+        self.ui.reg.clicked.connect(self.open_reg)
+
+    def open_ent(self):
+        self.w = Ent()
+        self.w.show()
+        self.close()
+
+    def open_reg(self):
+        self.w = Reg()
+        self.w.show()
+        self.close()
+
+
+class Ent(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.ui = Ui_login()
+        self.ui.setupUi(self)
+
+        self.ui.pb_home.clicked.connect(self.back_home)
+        self.ui.pb_done.clicked.connect(self.done)
+
+    def back_home(self):
+        self.w = Auth()
+        self.w.show()
+        self.close()
+
+    def done(self):
+        self.w = MainWin()
+        self.w.show()
+        self.close()
+
+
+class Reg(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.ui = Ui_login2()
+        self.ui.setupUi(self)
+
+        self.ui.pb_home.clicked.connect(self.back_home)
+        self.ui.pb_done.clicked.connect(self.done)
+
+    def back_home(self):
+        self.w = Auth()
+        self.w.show()
+        self.close()
+
+    def done(self):
+        self.w = MainWin()
+        self.w.show()
+        self.close()
+
+
+class MainWin(QWidget):
+    def __init__(self):
+        super(MainWin, self).__init__()
+        self.ui = Ui_Form2()
+        self.ui.setupUi(self)
+        self.ui.add_2.clicked.connect(self.create_win_path)
+
+    def create_win_path(self):
+        self.close()
+        self.w = PathWin()
+
+        self.w.show()
+
+
+class PathWin(QWidget):
+    def __init__(self):
+        super(PathWin, self).__init__()
+        self.ui = Ui_PathWin()
+        self.ui.setupUi(self)
+
+        self.ui.pb_browse.clicked.connect(self.getting_path)
+        self.ui.pb_done.clicked.connect(self.done)
+
+    def getting_path(self):
+        self.path = QtWidgets.QFileDialog.getExistingDirectory(self, 'Укажите папку')
+        self.ui.le_path.setText(self.path)
+
+    def done(self):
+        self.namejson = self.ui.le_filename.text()
+        path = self.ui.le_path.text()
+        if self.namejson != '' and os.path.exists(path):
+            self.create_win_add()
+        else:
+            self.ui.le_path.setText('')
+            ErrorWin()
+
+    def create_win_add(self):
+        self.w = AddWin(self)
+
+        self.w.show()
+        self.close()
+
 
 
 class ErrorWin:
@@ -48,7 +157,8 @@ class AddWin(QWidget):
         self.is_first_test = False
         self.group_num = 1
         self.name_files = []
-        #self.path = self.parrent.path
+        # self.path = self.parrent.path
+        # self.namejson = self.parrent.namejson
         self.path = r'C:\Users\катя\Desktop\genjson2\тест'
 
         self.ui.label.setFixedSize(850, 67)
@@ -90,6 +200,7 @@ class AddWin(QWidget):
         self.pushb_2_add.clicked.connect(lambda: self.add_test(2))
         self.pushb_2_create_file.clicked.connect(self.create_json_file)
 
+
     def add_test(self, btn): # окно со списками тестов
         self.w = FormWinChunk(btn, self)
 
@@ -123,17 +234,33 @@ class AddWin(QWidget):
                     "filling_type_variable": "{}.txt".format(j[0]),
                     "answer": "{}a.txt".format(j[0])
                 })
-            with open("data_file.json", "w") as write_file:
+            with open("{}\{}.json".format(self.path, self.namejson), "w") as write_file:
                 json.dump(self.json_file, write_file)
 
         self.close()
 
+    def closeEvent(self, event):
+        msg = QMessageBox(self)
+        msg.setWindowTitle("Внимание!")
+        msg.setIcon(QMessageBox.Question)
+        msg.setText("Вы действительно хотите выйти?")
+
+        buttonAceptar = msg.addButton("Да", QMessageBox.YesRole)
+        buttonCancelar = msg.addButton("Нет", QMessageBox.RejectRole)
+        msg.setDefaultButton(buttonCancelar)
+        msg.exec_()
+
+        if msg.clickedButton() == buttonAceptar:
+            event.accept()
+            self.w = MainWin()
+            self.w.show()
+        elif msg.clickedButton() == buttonCancelar:
+            event.ignore()
 
 class FormWinTest(QWidget):
-    def __init__(self, wid: DisplayWidget, arr=None, row=None, parent: AddWin | None = None):
+    def __init__(self, arr=None, row=None, parent: AddWin | None = None):
         super(FormWinTest, self).__init__()
         self.parrent = parent
-        self.wid = wid
         self.arr = arr
         self.row = row
         self.fl = False #редактируется или нет
@@ -492,9 +619,12 @@ class FormWinChunkEdit(FormWinChunk):
                     self.ui.lineEdit.setStyleSheet("color: red;")
                     break
 
+app = QApplication(sys.argv)
+# application = Auth()
+application = AddWin()
+application.show()
 
-
-
+sys.exit(app.exec())
 
 
 
