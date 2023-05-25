@@ -158,6 +158,7 @@ class AddWin(QWidget):
         self.parrent = parent
         self.counter = 0
 
+
         self.list_of_groups = []
         self.list_of_tests = [[]]
         self.counter_of_elem_grid1 = 0
