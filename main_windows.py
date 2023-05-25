@@ -2,7 +2,7 @@ import json
 import os
 import sys
 
-from PyQt5.QtWidgets import QApplication, QLabel, QButtonGroup, QWidget, QMessageBox, QTableWidgetItem
+from PyQt5.QtWidgets import QApplication, QLabel, QWidget, QMessageBox, QTableWidgetItem
 from PyQt5 import QtWidgets, QtGui, QtCore
 from pydantic import BaseModel
 
@@ -92,10 +92,17 @@ class MainWin(QWidget):
         self.ui = Ui_Form2()
         self.ui.setupUi(self)
         self.ui.add_2.clicked.connect(self.create_win_path)
+        self.ui.open_2.clicked.connect(self.create_win_edit)
 
     def create_win_path(self):
         self.close()
         self.w = PathWin()
+
+        self.w.show()
+
+    def create_win_edit(self):
+        self.close()
+        self.w = EditAddWin()
 
         self.w.show()
 
@@ -162,7 +169,6 @@ class AddWin(QWidget):
         self.path = r'C:\Users\катя\Desktop\genjson2\тест'
 
         self.ui.label.setFixedSize(850, 67)
-
         self.layout_2 = QtWidgets.QVBoxLayout()
 
         self.pushb_2_add = QtWidgets.QPushButton('Добавить')
@@ -257,11 +263,19 @@ class AddWin(QWidget):
         elif msg.clickedButton() == buttonCancelar:
             event.ignore()
 
+
+class EditAddWin:
+    def __init__(self, parent=None):
+        super(AddWin, self).__init__()
+        print('s')
+
+
 class FormWinTest(QWidget):
-    def __init__(self, arr=None, row=None, parent: AddWin | None = None):
+    def __init__(self, wid=None, arr=None, row=None, parent: AddWin | None = None):
         super(FormWinTest, self).__init__()
         self.parrent = parent
         self.arr = arr
+        self.wid = wid
         self.row = row
         self.fl = False #редактируется или нет
 
@@ -621,7 +635,7 @@ class FormWinChunkEdit(FormWinChunk):
 
 app = QApplication(sys.argv)
 # application = Auth()
-application = AddWin()
+application = MainWin()
 application.show()
 
 sys.exit(app.exec())
